@@ -892,7 +892,9 @@ and reverses it.
   cheating!
 -}
 rewind :: [a] -> [a]
-rewind = reverse
+rewind [] = []
+rewind [x] = [x]
+rewind (x:xs) = rewind xs ++ [x]
 
 
 {-
