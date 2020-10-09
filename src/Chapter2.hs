@@ -770,7 +770,7 @@ the list with only those lists that contain a passed element.
 🕯 HINT: Use the 'elem' function to check whether an element belongs to a list
 -}
 contains :: Int -> [[Int]] -> [[Int]]
-contains n xss = filter (\xs -> n `elem` xs) xss
+contains n = filter (elem n)
 
 
 {- |
@@ -874,8 +874,10 @@ list.
 rotate :: Int -> [a] -> [a]
 rotate n xs
   | n < 0 = []
-  | n == 0 = xs
-  | otherwise = let len = length xs in take len . drop n . cycle $ xs
+  | n == 0 || n `mod` len == 0 = xs
+  | otherwise = take len . drop n . cycle $ xs
+  where
+    len = length xs
 
 {- |
 =💣= Task 12*
@@ -892,9 +894,10 @@ and reverses it.
   cheating!
 -}
 rewind :: [a] -> [a]
-rewind [] = []
-rewind [x] = [x]
-rewind (x:xs) = rewind xs ++ [x]
+rewind xs = go xs [] where
+  go :: [a] -> [a] -> [a]
+  go [] acc = acc
+  go (y:ys) acc = go ys (y:acc)
 
 
 {-
