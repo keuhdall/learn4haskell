@@ -346,7 +346,7 @@ of a book, but you are not limited only by the book properties we described.
 Create your own book type of your dreams!
 -}
 
-data Genre = Fantasy | Novel | Thriller | SciFi | Other(String) deriving (Eq, Show)
+data Genre = Fantasy | Novel | Thriller | SciFi | Other String deriving (Eq, Show)
 
 data Book = Book {
   title :: String,
@@ -530,7 +530,9 @@ data City = City {
 } deriving Show
 
 buildCastle :: City -> String -> City
-buildCastle city castleName = city{castle = Castle(castleName)}
+buildCastle city castleName = case castle city of
+  CastleWithWalls _ -> city
+  _ -> city{castle = Castle castleName}
 
 buildHouse :: City -> House -> City
 buildHouse city@City{houses} house = city{houses = house:houses}
@@ -541,7 +543,7 @@ buildWalls city@City{castle,houses} = case castle of
   Castle castleName -> if pplCount > 10 then city{castle = CastleWithWalls(castleName)} else city
   _ -> city
   where
-    pplCount = foldl (\acc house' -> acc + (pplInHouse . peopleAmount $ house')) (0 :: Int) houses
+    pplCount = sum $ map (\house' -> pplInHouse . peopleAmount $ house') houses :: Int
     pplInHouse pa = case pa of
       One -> 1
       Two -> 2
