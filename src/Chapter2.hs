@@ -873,7 +873,7 @@ list.
 -}
 rotate :: Int -> [a] -> [a]
 rotate n xs
-  | n < 0 = []
+  | n < 0 || len == 0 = []
   | n == 0 || n `mod` len == 0 = xs
   | otherwise = take len . drop n . cycle $ xs
   where
